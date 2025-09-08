@@ -1,5 +1,4 @@
 using UserService.Application;
-using UserService.Application.Mapping;
 using UserService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

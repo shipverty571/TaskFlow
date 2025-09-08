@@ -23,4 +23,16 @@ public class UserManager
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
         await _userRepository.Create(user);
     }
+
+    public async Task<User?> Login(LoginDto loginDto)
+    {
+        var user = await _userRepository.GetByEmail(loginDto.Email);
+        if (user == null
+            || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+        {
+            return null;
+        }
+
+        return user;
+    }
 }

@@ -1,6 +1,6 @@
 ﻿namespace UserService.Domain.DTOs;
 
-public class RegisterDto
+public record RegisterDto
 {
     public Guid Id { get; set; }
 

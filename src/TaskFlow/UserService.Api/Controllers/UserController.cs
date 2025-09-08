@@ -1,21 +1,22 @@
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UserService.Api.Factories;
 using UserService.Application.Services;
 using UserService.Domain.DTOs;
-using UserService.Domain.Entities;
 
 namespace UserService.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("auth")]
 public class UserController : ControllerBase
 {
     private readonly UserManager _userManager;
 
-    public UserController(UserManager userManager)
+    private readonly IConfiguration _configuration;
+
+    public UserController(UserManager userManager, IConfiguration configuration)
     {
         _userManager = userManager;
+        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -27,8 +28,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login()
+    public async Task<IActionResult> Login(LoginDto loginDto)
     {
-        return Ok();
+        var user = await _userManager.Login(loginDto);
+        if (user == null) return Unauthorized();
+
+        var jwt = JwtFactory.Generate(user, _configuration);
+        return Ok(new { Token = jwt });
     }
 }

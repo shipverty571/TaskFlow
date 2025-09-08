@@ -1,6 +1,6 @@
 ﻿namespace UserService.Domain.DTOs;
 
-public class LoginDto
+public record LoginDto
 {
     public string Email { get; set; }
 
